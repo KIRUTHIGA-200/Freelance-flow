@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreelanceFlow - Indian Freelance Network</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- AUTHENTICATION OVERLAY (DEFAULT HOME PAGE) -->
+  <div id="auth-screen" class="auth-overlay">
+    <div class="auth-card glass-card">
+      <div class="brand-container auth-brand">
+        <div class="logo-icon"><span class="logo-symbol">⚡</span></div>
+        <h2 class="brand-name">Freelance<span class="brand-accent">Flow</span></h2>
+      </div>
+
+      <div class="auth-toggle-btns">
+        <button id="tab-login-btn" class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
+        <button id="tab-register-btn" class="auth-tab" onclick="switchAuthTab('register')">Register New Account</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="login-form" class="auth-form active">
+        <h3>Welcome Back</h3>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="login-email" placeholder="Enter your email" required>
+        </div>
+        <button type="submit" class="btn-primary auth-submit-btn">Login to Platform</button>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="register-form" class="auth-form">
+        <h3>Create an Account</h3>
+        <div class="form-group">
+          <label>Account Type</label>
+          <select id="reg-role" onchange="applyRegisterPlaceholders()">
+            <option value="freelancer">Freelancer (Looking for Work)</option>
+            <option value="organization">Organization / Client (Hiring)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Full Name / Entity Name</label>
+          <input type="text" id="reg-name" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="reg-email" required>
+        </div>
+        <div class="form-group">
+          <label>Headline / Specialization</label>
+          <input type="text" id="reg-headline">
+        </div>
+        <div class="form-group">
+          <label>Hourly Rate (₹ in Whole Numbers)</label>
+          <input type="number" id="reg-rate" min="0" step="1">
+        </div>
+        <button type="submit" class="btn-primary auth-submit-btn">Register & Start</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div class="app-container hidden" id="app-workspace">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar no-print">
+      <div class="brand-container">
+        <div class="logo-icon"><span class="logo-symbol">⚡</span></div>
+        <h2 class="brand-name">Freelance<span class="brand-accent">Flow</span></h2>
+      </div>
+
+      <!-- CLICKABLE USER BADGE WITH SWITCHER DROPDOWN -->
+      <div class="user-badge-container">
+        <div id="user-badge" class="user-badge" onclick="toggleUserMenu()">
+          <div class="user-avatar" id="badge-avatar">?</div>
+          <div class="user-info">
+            <span id="badge-name">Guest</span>
+            <span id="badge-role" class="role-tag">Role</span>
+          </div>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+
+        <!-- Account Switcher & Logout Dropdown -->
+        <div id="user-menu-dropdown" class="user-menu-dropdown hidden">
+          <div class="menu-header">Switch Account</div>
+          <div id="quick-switch-users-list" class="switch-list"></div>
+          <div class="menu-divider"></div>
+          <button id="btn-logout-menu" class="menu-action-btn danger">🚪 Log Out</button>
+        </div>
+      </div>
+
+      <nav class="nav-links">
+        <button class="nav-btn active" data-tab="feed-tab">📰 Network Feed</button>
+        <button class="nav-btn" data-tab="profile-tab">👤 My Profile</button>
+        <button class="nav-btn" data-tab="freelancers-tab">👥 Freelancers Directory</button>
+        <button class="nav-btn" data-tab="gigs-tab">💼 Gigs & Applications</button>
+        <button class="nav-btn" data-tab="messages-tab">💬 Messages & Chat</button>
+        <button class="nav-btn" data-tab="time-tracker-tab">⏱️ Work Logger</button>
+        <button class="nav-btn" data-tab="invoices-tab">📄 Invoice Studio</button>
+      </nav>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+
+      <!-- 1. NETWORK FEED -->
+      <section id="feed-tab" class="tab-content active">
+        <header class="section-header">
+          <h1>Network Feed</h1>
+          <p>Read posts from freelancers and clients across the community.</p>
+        </header>
+
+        <div class="form-card glass-card">
+          <textarea id="feed-post-input" rows="3" placeholder="Share an update, requirement, or announcement with the community..."></textarea>
+          <button id="btn-submit-post" class="btn-primary" style="margin-top:10px;">📢 Share Post</button>
+        </div>
+
+        <div id="posts-container" class="posts-feed"></div>
+      </section>
+
+      <!-- 2. MY PROFILE -->
+      <section id="profile-tab" class="tab-content">
+        <header class="section-header">
+          <h1>My Profile Settings</h1>
+          <p>Update your details anytime.</p>
+        </header>
+
+        <form id="profile-form" class="form-card glass-card">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Account Type:</label>
+              <select id="prof-role">
+                <option value="freelancer">Freelancer</option>
+                <option value="organization">Organization</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Full Name / Entity Name:</label>
+              <input type="text" id="prof-name" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email Address:</label>
+              <input type="email" id="prof-email" readonly disabled>
+            </div>
+            <div class="form-group">
+              <label>Headline / Title:</label>
+              <input type="text" id="prof-headline">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Skills / Focus Areas (Comma Separated):</label>
+            <input type="text" id="prof-skills">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Hourly Rate (₹ in Whole Numbers):</label>
+              <input type="number" id="prof-rate" min="0" step="1">
+            </div>
+            <div class="form-group">
+              <label>Location:</label>
+              <input type="text" id="prof-location">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Bio / About Summary:</label>
+            <textarea id="prof-bio" rows="4"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">Save Profile Changes</button>
+        </form>
+      </section>
+
+      <!-- 3. FREELANCERS DIRECTORY -->
+      <section id="freelancers-tab" class="tab-content">
+        <header class="section-header"><h1>Freelancer Directory</h1></header>
+        <div id="freelancers-grid" class="cards-grid"></div>
+      </section>
+
+      <!-- 4. GIGS & APPLICATIONS -->
+      <section id="gigs-tab" class="tab-content">
+        <header class="section-header"><h1>Gig Marketplace & Applications</h1></header>
+
+        <!-- Gig Creation for Organizations -->
+        <div id="create-gig-box" class="form-card glass-card hidden">
+          <h3>Post a New Gig</h3>
+          <div class="form-group">
+            <label>Gig Title:</label>
+            <input type="text" id="gig-title-input" placeholder="e.g. Spring Boot Backend Developer">
+          </div>
+          <div class="form-group">
+            <label>Description:</label>
+            <textarea id="gig-desc-input" rows="2" placeholder="Detail the requirements..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>Budget (₹):</label>
+            <input type="number" id="gig-budget-input" placeholder="15000">
+          </div>
+          <button id="btn-post-gig" class="btn-primary">Publish Gig</button>
+        </div>
+
+        <div id="gigs-grid" class="cards-grid" style="margin-bottom:25px;"></div>
+        <div class="table-container glass-card">
+          <h3>Applications Tracker</h3>
+          <table>
+            <thead><tr><th>Gig Title</th><th>Applicant</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="applications-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. CHAT -->
+      <section id="messages-tab" class="tab-content">
+        <header class="section-header"><h1>In-App Messages</h1></header>
+        <div class="chat-layout glass-card">
+          <div class="chat-users-list" id="chat-users-list"></div>
+          <div class="chat-window">
+            <div class="chat-header" id="chat-active-header">Select a member to chat</div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-area">
+              <input type="text" id="chat-message-input" placeholder="Type message...">
+              <button id="btn-send-message" class="btn-primary">Send</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. WORK LOGGER -->
+      <section id="time-tracker-tab" class="tab-content">
+        <header class="section-header">
+          <h1>Work Logger & Contract Hours</h1>
+        </header>
+
+        <form id="log-work-form" class="form-card glass-card">
+          <div class="form-group">
+            <label>Accepted Contract:</label>
+            <select id="log-contract-select" required><option value="">Select Accepted Contract</option></select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Start Date:</label>
+              <input type="date" id="log-start-date" required>
+            </div>
+            <div class="form-group">
+              <label>Start Time:</label>
+              <input type="time" id="log-start-time" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>End Date:</label>
+              <input type="date" id="log-end-date" required>
+            </div>
+            <div class="form-group">
+              <label>End Time:</label>
+              <input type="time" id="log-end-time" required>
+            </div>
+          </div>
+
+          <div class="calculated-preview" id="duration-preview">Total Calculated Duration: <strong>0 Hours</strong></div>
+          <button type="submit" class="btn-primary">Log Work Session</button>
+        </form>
+
+        <div class="table-container glass-card">
+          <h3>Work Session History</h3>
+          <table>
+            <thead>
+              <tr><th>Start</th><th>End</th><th>Contract</th><th>Logged Duration</th></tr>
+            </thead>
+            <tbody id="time-log-list"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. INVOICE STUDIO -->
+      <section id="invoices-tab" class="tab-content">
+        <header class="section-header no-print"><h1>Invoice Studio</h1></header>
+        <div class="invoice-controls no-print">
+          <select id="invoice-contract-select"><option value="">Select Accepted Contract</option></select>
+          <button id="btn-generate-invoice" class="btn-primary">Generate Invoice</button>
+          <button class="btn-secondary" onclick="window.print()">🖨️ Print / Save PDF</button>
+        </div>
+
+        <div id="invoice-paper" class="invoice-paper">
+          <div class="invoice-header">
+            <div><h2>INVOICE</h2><p id="invoice-id">#INV-0000</p></div>
+            <div class="invoice-brand"><h3>Freelance<span>Flow</span></h3></div>
+          </div>
+          <div class="invoice-meta">
+            <div id="invoice-freelancer-info"></div>
+            <div id="invoice-org-info"></div>
+          </div>
+          <table class="invoice-table">
+            <thead>
+              <tr><th>Description</th><th>Hours</th><th>Rate (₹)</th><th>Total (₹)</th></tr>
+            </thead>
+            <tbody id="invoice-items"></tbody>
+          </table>
+          <div class="invoice-total">
+            <h3>Total Amount Due: <span id="invoice-total-amount">₹0</span></h3>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
